@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 def detection_mask(img_path):
     face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
@@ -25,7 +26,8 @@ def detection_mask(img_path):
 
         if len(tmp_mouth) > 0:
             #tmp_mouth_len = len(tmp_mouth)
-            (mx,my,mw,mh) =  tmp_mouth[-1] #口候補のうち最後のもの
+            tmp_mouth = tmp_mouth[np.argsort(tmp_mouth[:, 1])]
+            (mx,my,mw,mh) =  tmp_mouth[-1] #口候補のうち一番下にあるもの
 
             cv2.rectangle(roi_color,(mx,my),(mx+mw,my+mh),(0,255,255),2)
             mask_flag = False
@@ -39,5 +41,5 @@ def detection_mask(img_path):
     cv2.waitKey(5000)
     cv2.destroyAllWindows()
 
-img_path = 'mask.png'
+img_path = 'no_mask.png'
 detection_mask(img_path)
